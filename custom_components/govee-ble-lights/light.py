@@ -309,12 +309,8 @@ class GoveeBluetoothLight(LightEntity):
         self._state = False
 
     async def _connectBluetooth(self) -> BleakClient:
-        for i in range(3):
-            try:
-                client = await bleak_retry_connector.establish_connection(BleakClient, self._ble_device, self.unique_id)
-                return client
-            except:
-                continue
+        client = await bleak_retry_connector.establish_connection(BleakClient, self._ble_device, self.unique_id)
+        return client
 
     def _prepareSinglePacketData(self, cmd, payload):
         if not isinstance(cmd, int):

@@ -3,7 +3,6 @@ from __future__ import annotations
 import array
 import logging
 import re
-import time
 
 from enum import IntEnum
 import bleak_retry_connector
@@ -321,7 +320,6 @@ class GoveeBluetoothLight(LightEntity):
                 client = await bleak_retry_connector.establish_connection(BleakClient, self._ble_device, self.unique_id)
                 return client
             except:
-                time.sleep(1)
                 continue
 
     def _prepareSinglePacketData(self, cmd, payload):

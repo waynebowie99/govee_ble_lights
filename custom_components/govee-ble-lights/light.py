@@ -300,12 +300,18 @@ class GoveeBluetoothLight(LightEntity):
 
         for command in commands:
             client = await self._connectBluetooth()
-            await client.write_gatt_char(UUID_CONTROL_CHARACTERISTIC, command, False)
+            try:
+                await client.write_gatt_char(UUID_CONTROL_CHARACTERISTIC, command, False)
+            finally:
+                client.disconnect()
 
     async def async_turn_off(self, **kwargs) -> None:
         client = await self._connectBluetooth()
-        await client.write_gatt_char(UUID_CONTROL_CHARACTERISTIC,
+        try:
+            await client.write_gatt_char(UUID_CONTROL_CHARACTERISTIC,
                                      self._prepareSinglePacketData(LedCommand.POWER, [0x0]), False)
+        finally:
+            client.disconnect()
         self._state = False
 
     async def _connectBluetooth(self) -> BleakClient:
